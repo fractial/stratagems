@@ -1,112 +1,113 @@
-import Image from "next/image";
+'use client';
+
+import {
+  getRandomStratagem,
+  type Direction,
+  type Stratagem,
+} from '@/app/stratagems';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [stratagem, setStratagem] = useState<Stratagem>();
+  const [stratagemIndex, setStratagemIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setStratagem(getRandomStratagem());
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (stratagemIndex === stratagem?.keys.length) return; // Failsave
+
+      const key = getDirection(event.key);
+      const currentKey = stratagem?.keys?.[stratagemIndex];
+
+      if (key !== currentKey) {
+        setStratagemIndex(0);
+        return;
+      }
+
+      setStratagemIndex((index) => index + 1);
+
+      if (stratagemIndex + 1 !== stratagem?.keys.length) return;
+
+      setTimeout(() => {
+        setStratagemIndex(0);
+
+        let newStratagem = getRandomStratagem();
+        while (newStratagem === stratagem) {
+          newStratagem = getRandomStratagem();
+        }
+        setStratagem(newStratagem);
+      }, 100);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [stratagem, stratagemIndex]);
+
+  const getDirection = (key: string): string | undefined => {
+    switch (key) {
+      case 'ArrowDown':
+        return 'down';
+      case 'ArrowLeft':
+        return 'left';
+      case 'ArrowRight':
+        return 'right';
+      case 'ArrowUp':
+        return 'up';
+    }
+  };
+
+  const getRotation = (direction: Direction): string => {
+    switch (direction) {
+      case 'down':
+        return 'rotate(180deg)';
+      case 'left':
+        return 'rotate(-90deg)';
+      case 'right':
+        return 'rotate(90deg)';
+      case 'up':
+        return 'rotate(0deg)';
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <main className="h-screen">
+      <div className="absolute flex items-center justify-center gap-2 p-4">
+        <svg
+          width="26"
+          height="26"
+          viewBox="0 0 26 26"
+          fill={stratagem?.variant}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12.6464 0.625618C12.8417 0.430355 13.1583 0.430355 13.3536 0.625618L25.3744 12.6464C25.5696 12.8417 25.5696 13.1583 25.3744 13.3535L20.4246 18.3033C20.2294 18.4985 19.9128 18.4985 19.7175 18.3033L7.6967 6.28247C7.50144 6.08721 7.50144 5.77063 7.6967 5.57536L12.6464 0.625618ZM12.6464 14.7678C12.8417 14.5725 13.1583 14.5725 13.3536 14.7678L18.3033 19.7175C18.4986 19.9128 18.4986 20.2293 18.3033 20.4246L13.3536 25.3744C13.1583 25.5696 12.8417 25.5696 12.6464 25.3744L7.6967 20.4246C7.50144 20.2293 7.50144 19.9128 7.6967 19.7175L12.6464 14.7678ZM6.28249 7.69669C6.08722 7.50142 5.77064 7.50142 5.57538 7.69669L0.625632 12.6464C0.43037 12.8417 0.430369 13.1583 0.625632 13.3535L5.57538 18.3033C5.77064 18.4985 6.08722 18.4985 6.28249 18.3033L11.2322 13.3535C11.4275 13.1583 11.4275 12.8417 11.2322 12.6464L6.28249 7.69669Z" />
+        </svg>
+        <h1>{stratagem?.name}</h1>
+        <p>{stratagemIndex}</p>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="flex flex-1 items-center justify-center gap-2 h-screen">
+        {stratagem &&
+          stratagem?.keys.map((direction, index) => (
+            <div
+              key={index}
+              style={{
+                fill: index < stratagemIndex ? 'green' : '#d6d7d6',
+                transform: getRotation(direction),
+              }}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M4 9.5C4 9.22386 3.77614 9 3.5 9H0.5C0.223858 9 0 8.77614 0 8.5V7.45377C0 7.16541 0.12448 6.89108 0.341495 6.70119L7.3415 0.576191C7.71852 0.246293 8.28148 0.246294 8.6585 0.576192L15.6585 6.70119C15.8755 6.89108 16 7.16541 16 7.45377V8.5C16 8.77614 15.7761 9 15.5 9H12.5C12.2239 9 12 9.22386 12 9.5V15.5C12 15.7761 11.7761 16 11.5 16H4.5C4.22386 16 4 15.7761 4 15.5V9.5Z" />
+              </svg>
+            </div>
+          ))}
       </div>
     </main>
   );
