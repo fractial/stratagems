@@ -35,22 +35,20 @@ export default function Home() {
       if (stratagemIndex + 1 !== stratagem?.keys.length) return;
 
       setTimeout(() => {
-        setScore(Math.round(score + Math.pow(stratagemIndex, 2) / 2)); // SCORE
+        setScore((score) =>
+          Math.round(score + Math.pow(stratagemIndex, 2) / 2)
+        ); // SCORE
 
         setStratagemIndex(0);
 
-        let newStratagem = getRandomStratagem();
-        while (newStratagem === stratagem) {
-          newStratagem = getRandomStratagem();
-        }
-        setStratagem(newStratagem);
+        setStratagem(getRandomStratagem());
       }, 100);
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [stratagem, stratagemIndex, score]);
+  }, [stratagem, stratagemIndex]);
 
   const getDirection = (key: string): string | undefined =>
     ({
@@ -75,9 +73,9 @@ export default function Home() {
   // #f8df46 d6d7d6 32392d
 
   return (
-    <main className="h-screen font-mono text-[#d6d7d6] bg-black">
+    <main className="h-screen font-mono">
       <div className="w-screen absolute flex items-center justify-start gap-2 p-4">
-        <div className="w-8 h-8 flex items-center justify-center bg-[#f8df46] fill-[#32392d] rounded">
+        <div className="w-8 h-8 flex items-center justify-center bg-[--accent-hex] fill-[#32392d] rounded">
           <svg
             width="16"
             height="16"
