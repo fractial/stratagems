@@ -81,7 +81,7 @@ export default function Home() {
   // #f8df46 d6d7d6 32392d
 
   return (
-    <main className="h-screen font-mono text-[#d6d7d6]">
+    <main className="h-screen font-mono text-[#d6d7d6] bg-black">
       <div className="w-screen absolute flex items-center justify-start gap-2 p-4">
         <div className="w-8 h-8 flex items-center justify-center bg-[#f8df46] fill-[#32392d] rounded">
           <svg
