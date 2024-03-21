@@ -50,7 +50,7 @@ export default function Home() {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [stratagem, stratagemIndex]);
+  }, [stratagem, stratagemIndex, score]);
 
   const getDirection = (key: string): string | undefined => {
     switch (key) {
@@ -61,6 +61,14 @@ export default function Home() {
       case 'ArrowRight':
         return 'right';
       case 'ArrowUp':
+        return 'up';
+      case 's':
+        return 'down';
+      case 'a':
+        return 'left';
+      case 'd':
+        return 'right';
+      case 'w':
         return 'up';
     }
   };
