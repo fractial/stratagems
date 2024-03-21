@@ -52,39 +52,25 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [stratagem, stratagemIndex, score]);
 
-  const getDirection = (key: string): string | undefined => {
-    switch (key) {
-      case 'ArrowDown':
-        return 'down';
-      case 'ArrowLeft':
-        return 'left';
-      case 'ArrowRight':
-        return 'right';
-      case 'ArrowUp':
-        return 'up';
-      case 's':
-        return 'down';
-      case 'a':
-        return 'left';
-      case 'd':
-        return 'right';
-      case 'w':
-        return 'up';
-    }
-  };
+  const getDirection = (key: string): string | undefined =>
+    ({
+      ArrowDown: 'down',
+      s: 'down',
+      ArrowLeft: 'left',
+      a: 'left',
+      ArrowRight: 'right',
+      d: 'right',
+      ArrowUp: 'up',
+      w: 'up',
+    }[key]);
 
-  const getRotation = (direction: Direction): string => {
-    switch (direction) {
-      case 'down':
-        return 'rotate(180deg)';
-      case 'left':
-        return 'rotate(-90deg)';
-      case 'right':
-        return 'rotate(90deg)';
-      case 'up':
-        return 'rotate(0deg)';
-    }
-  };
+  const getRotation = (direction: Direction): string =>
+    ({
+      down: 'rotate(180deg)',
+      left: 'rotate(-90deg)',
+      right: 'rotate(90deg)',
+      up: 'rotate(0deg)',
+    }[direction]);
 
   // #f8df46 d6d7d6 32392d
 
@@ -99,8 +85,8 @@ export default function Home() {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M28.7368 0L8.21053 13V46L0 56L17.4474 70L20.5263 68L28.7368 78H49.2632L57.4737 68L60.5526 70L78 56L69.7895 46V13L49.2632 0H28.7368ZM22 59C26.4183 59 30 55.4183 30 51C30 46.5817 26.4183 43 22 43C17.5817 43 14 46.5817 14 51C14 55.4183 17.5817 59 22 59ZM56 59C60.4183 59 64 55.4183 64 51C64 46.5817 60.4183 43 56 43C51.5817 43 48 46.5817 48 51C48 55.4183 51.5817 59 56 59ZM39 58L45 66L43 68L39 66L35 68L33 66L39 58Z"
             />
           </svg>
@@ -120,8 +106,8 @@ export default function Home() {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M15.9987 25.9472C15.4495 26.0056 15 25.5523 15 25V1.00001C15 0.447729 15.4495 -0.0055396 15.9987 0.0528709C21.6058 0.649234 26 6.21816 26 13C26 19.7819 21.6058 25.3508 15.9987 25.9472ZM10.0013 25.9472C10.5505 26.0056 11 25.5523 11 25V1.00003C11 0.447743 10.5505 -0.00552602 10.0013 0.0528845C4.39418 0.649247 0 6.21818 0 13C0 19.7819 4.39418 25.3508 10.0013 25.9472Z"
             />
           </svg>
