@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const [stratagem, setStratagem] = useState<Stratagem>();
   const [stratagemIndex, setStratagemIndex] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
 
   useEffect(() => {
     setStratagem(getRandomStratagem());
@@ -17,6 +18,8 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      event.preventDefault();
+
       if (stratagemIndex === stratagem?.keys.length) return; // Failsave
 
       const key = getDirection(event.key);
@@ -32,6 +35,8 @@ export default function Home() {
       if (stratagemIndex + 1 !== stratagem?.keys.length) return;
 
       setTimeout(() => {
+        setScore(Math.round(score + Math.pow(stratagemIndex, 2) / 2)); // SCORE
+
         setStratagemIndex(0);
 
         let newStratagem = getRandomStratagem();
@@ -73,41 +78,68 @@ export default function Home() {
     }
   };
 
+  // #f8df46 d6d7d6 32392d
+
   return (
-    <main className="h-screen">
-      <div className="absolute flex items-center justify-center gap-2 p-4">
-        <svg
-          width="26"
-          height="26"
-          viewBox="0 0 26 26"
-          fill={stratagem?.variant}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12.6464 0.625618C12.8417 0.430355 13.1583 0.430355 13.3536 0.625618L25.3744 12.6464C25.5696 12.8417 25.5696 13.1583 25.3744 13.3535L20.4246 18.3033C20.2294 18.4985 19.9128 18.4985 19.7175 18.3033L7.6967 6.28247C7.50144 6.08721 7.50144 5.77063 7.6967 5.57536L12.6464 0.625618ZM12.6464 14.7678C12.8417 14.5725 13.1583 14.5725 13.3536 14.7678L18.3033 19.7175C18.4986 19.9128 18.4986 20.2293 18.3033 20.4246L13.3536 25.3744C13.1583 25.5696 12.8417 25.5696 12.6464 25.3744L7.6967 20.4246C7.50144 20.2293 7.50144 19.9128 7.6967 19.7175L12.6464 14.7678ZM6.28249 7.69669C6.08722 7.50142 5.77064 7.50142 5.57538 7.69669L0.625632 12.6464C0.43037 12.8417 0.430369 13.1583 0.625632 13.3535L5.57538 18.3033C5.77064 18.4985 6.08722 18.4985 6.28249 18.3033L11.2322 13.3535C11.4275 13.1583 11.4275 12.8417 11.2322 12.6464L6.28249 7.69669Z" />
-        </svg>
-        <h1>{stratagem?.name}</h1>
-        <p>{stratagemIndex}</p>
+    <main className="h-screen font-mono text-[#d6d7d6]">
+      <div className="w-screen absolute flex items-center justify-start gap-2 p-4">
+        <div className="w-8 h-8 flex items-center justify-center bg-[#f8df46] fill-[#32392d] rounded">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 78 78"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M28.7368 0L8.21053 13V46L0 56L17.4474 70L20.5263 68L28.7368 78H49.2632L57.4737 68L60.5526 70L78 56L69.7895 46V13L49.2632 0H28.7368ZM22 59C26.4183 59 30 55.4183 30 51C30 46.5817 26.4183 43 22 43C17.5817 43 14 46.5817 14 51C14 55.4183 17.5817 59 22 59ZM56 59C60.4183 59 64 55.4183 64 51C64 46.5817 60.4183 43 56 43C51.5817 43 48 46.5817 48 51C48 55.4183 51.5817 59 56 59ZM39 58L45 66L43 68L39 66L35 68L33 66L39 58Z"
+            />
+          </svg>
+        </div>
+        <h1>Stratagem Hero</h1>
+        <p className="ml-auto">Score: {score}</p>
       </div>
-      <div className="flex flex-1 items-center justify-center gap-2 h-screen">
-        {stratagem &&
-          stratagem?.keys.map((direction, index) => (
-            <div
-              key={index}
-              style={{
-                fill: index < stratagemIndex ? 'green' : '#d6d7d6',
-                transform: getRotation(direction),
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
+      <div className="flex flex-col items-center justify-center gap-4 h-screen">
+        <div
+          className="flex items-center gap-2 font-mono"
+          style={{ fill: stratagem?.variant }}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 26 26"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M15.9987 25.9472C15.4495 26.0056 15 25.5523 15 25V1.00001C15 0.447729 15.4495 -0.0055396 15.9987 0.0528709C21.6058 0.649234 26 6.21816 26 13C26 19.7819 21.6058 25.3508 15.9987 25.9472ZM10.0013 25.9472C10.5505 26.0056 11 25.5523 11 25V1.00003C11 0.447743 10.5505 -0.00552602 10.0013 0.0528845C4.39418 0.649247 0 6.21818 0 13C0 19.7819 4.39418 25.3508 10.0013 25.9472Z"
+            />
+          </svg>
+          <p>{stratagem?.name}</p>
+        </div>
+        <div className="flex gap-2">
+          {stratagem &&
+            stratagem?.keys.map((direction, index) => (
+              <div
+                key={index}
+                style={{
+                  fill: index < stratagemIndex ? '#1a65c7' : '#d6d7d6',
+                  transform: getRotation(direction),
+                }}
               >
-                <path d="M4 9.5C4 9.22386 3.77614 9 3.5 9H0.5C0.223858 9 0 8.77614 0 8.5V7.45377C0 7.16541 0.12448 6.89108 0.341495 6.70119L7.3415 0.576191C7.71852 0.246293 8.28148 0.246294 8.6585 0.576192L15.6585 6.70119C15.8755 6.89108 16 7.16541 16 7.45377V8.5C16 8.77614 15.7761 9 15.5 9H12.5C12.2239 9 12 9.22386 12 9.5V15.5C12 15.7761 11.7761 16 11.5 16H4.5C4.22386 16 4 15.7761 4 15.5V9.5Z" />
-              </svg>
-            </div>
-          ))}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M4 9.5C4 9.22386 3.77614 9 3.5 9H0.5C0.223858 9 0 8.77614 0 8.5V7.45377C0 7.16541 0.12448 6.89108 0.341495 6.70119L7.3415 0.576191C7.71852 0.246293 8.28148 0.246294 8.6585 0.576192L15.6585 6.70119C15.8755 6.89108 16 7.16541 16 7.45377V8.5C16 8.77614 15.7761 9 15.5 9H12.5C12.2239 9 12 9.22386 12 9.5V15.5C12 15.7761 11.7761 16 11.5 16H4.5C4.22386 16 4 15.7761 4 15.5V9.5Z" />
+                </svg>
+              </div>
+            ))}
+        </div>
       </div>
     </main>
   );
